@@ -17,4 +17,3 @@
     - Description contains clear instructions on how to test the feature
 - [ ] Tests have been written
 - [ ] Appropriate labels have been applied
-- 
