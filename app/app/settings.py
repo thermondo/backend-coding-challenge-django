@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'core.authentication.LoginRequiredMiddleware',
+    'middleware.authentication.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -149,3 +149,7 @@ LOGIN_EXEMPT_URLS = (
     'notes/list/',
     'notes/tags/',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}

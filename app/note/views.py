@@ -5,10 +5,23 @@ from rest_framework import viewsets, permissions
 from .models import Tag, Note
 from .serializers import TagSerializer, NoteSerializer
 
+
 class NoteViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(author=self.request.user)
+
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            return super().get_queryset()
+        else:
+            return Note.objects.filter(author=self.request.user)
 
 
 class TagViewSet(viewsets.ModelViewSet):
