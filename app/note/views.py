@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 # Create your views here.
 
 from .models import Tag, Note
@@ -22,6 +22,12 @@ class NoteViewSet(viewsets.ModelViewSet):
             return super().get_queryset()
         else:
             return Note.objects.filter(author=self.request.user)
+
+
+class NoteList(generics.ListAPIView):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+    filterset_fields = ['tags__name']
 
 
 class TagViewSet(viewsets.ModelViewSet):
