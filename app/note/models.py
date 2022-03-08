@@ -14,6 +14,7 @@ class Note(models.Model):
     body = models.TextField()
     tags = models.ManyToManyField(Tag)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    public = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return self.title

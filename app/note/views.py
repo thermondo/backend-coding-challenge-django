@@ -19,7 +19,7 @@ class NoteViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_anonymous:
-            return super().get_queryset()
+            return Note.objects.filter(public=True)
         else:
             return Note.objects.filter(author=self.request.user)
 
