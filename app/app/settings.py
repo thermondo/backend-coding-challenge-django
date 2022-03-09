@@ -146,6 +146,8 @@ LOGIN_EXEMPT_URLS = (
     'login/',
     'logout/',
     'admin/',
+    'search',
+    'filter',
     'notes/list/',
     'notes/tags/',
 )

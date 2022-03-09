@@ -29,6 +29,31 @@ class NoteList(generics.ListAPIView):
     serializer_class = NoteSerializer
     filterset_fields = ['tags__name']
 
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            return Note.objects.filter(public=True)
+        else:
+            return Note.objects.filter(author=self.request.user)
+
+
+class NoteSearch(generics.ListAPIView):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+    filterset_fields = ['body', 'title']
+
+    def get_queryset(self):
+        search = self.request.GET.get('body')
+        if search:
+            if self.request.user.is_anonymous:
+                return Note.objects.filter(body__contains=search, public=True)
+            else:
+                return Note.objects.filter(body__contains=search, author=self.request.user)
+        else:
+            if self.request.user.is_anonymous:
+                return Note.objects.filter(public=True)
+            else:
+                return Note.objects.filter(author=self.request.user)
+
 
 class TagViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]

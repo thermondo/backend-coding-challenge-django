@@ -46,9 +46,11 @@ Try to produce something that is at least minimally functional. Part of the exer
 * To create notes, You have to create [tags](http://0.0.0.0:8000/notes/tags/)
 * Now to create [notes](http://0.0.0.0:8000/notes/list/) with DRF UI
 * You can now logout using [url](http://0.0.0.0:8000/logout)
-* Even in logged out page you can access [notes](http://0.0.0.0:8000/notes/list/) but cannot modify
+* Even in logged out state you can access [notes](http://0.0.0.0:8000/notes/list/) with notes that are public, but cannot modify
+* Filter by tags is possible with [url](http://0.0.0.0:8000/filter)
 
 # TODO
-* Add user to Note model, with private flag
-* This will be useful for implementing private notes readable only to the user that created it.
-
+* user management api
+* add enabled flag in tags to remove old flags in the new notes
+* add caching for tags data as they are not getting changed frequently
+* add elastic search/Solr for keyword based search
