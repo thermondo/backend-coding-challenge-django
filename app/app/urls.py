@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from note.views import NoteDetail, NoteList, TagDetail, TagList
+from note.views import NoteDetail, NoteList, TagDetail, TagList, NotesTagList
 from user.views import GroupViewSet, UserList, UserDetail
 
 router = routers.DefaultRouter()
@@ -28,6 +28,7 @@ urlpatterns = [
     path('users/<int:pk>/', UserDetail.as_view()),
     path('notes/', NoteList.as_view()),
     path('notes/<int:pk>/', NoteDetail.as_view()),
+    path('tags/<int:pk>/notes/', NotesTagList.as_view()),
     path('tags/', TagList.as_view()),
     path('tags/<int:pk>/', TagDetail().as_view()),
     path('admin/', admin.site.urls),

@@ -1,7 +1,7 @@
 from note.permissions import IsAuthorOrReadOnly
 from note.models import Note, Tag
 from note.serializers import NoteSerializer, TagSerializer
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, permissions, generics, views, response
 
 
 class TagList(generics.ListCreateAPIView):
@@ -33,3 +33,14 @@ class NoteDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class NotesTagList(views.APIView):
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly)
+
+    def get(self, request, *args, **kwargs):
+        tags = Tag.objects.filter(**kwargs).first()
+        serializer = NoteSerializer(
+            tags.notes.filter(author=request.user), many=True)
+        return response.Response(serializer.data)
