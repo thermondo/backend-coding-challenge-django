@@ -73,8 +73,6 @@ class NoteTestSuit(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_update_note(self):
-        self.payload["title"] = "heyhey"
-        self.payload["tags"] = [{"name": "blahblah"}]
         request = self.factory.post(self.url.get("notes"),
                                     json.dumps(self.payload),
                                     content_type=self.content_type)
@@ -131,9 +129,17 @@ class NoteTestSuit(TestCase):
         request = self.factory.get(self.url.get("notes"))
         response = NoteList.as_view()(request)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 4)
+        self.assertEqual(response.data["count"], 1)
 
     def test_tags_notes_of_user(self):
+        request = self.factory.post(self.url.get("notes"),
+                                    json.dumps(self.payload),
+                                    content_type=self.content_type)
+        force_authenticate(request, user=self.another_user)
+        another_response = NoteList.as_view()(request)
+
+        self.payload["title"] = "heyhey"
+        self.payload["tags"] = [{"name": "blahblah"}]
         request = self.factory.post(self.url.get("notes"),
                                     json.dumps(self.payload),
                                     content_type=self.content_type)
@@ -146,5 +152,12 @@ class NoteTestSuit(TestCase):
         force_authenticate(request, user=self.user)
         response = NotesTagList.as_view()(request)
         self.assertEqual(response.status_code, 200)
-        print(response.data)
+        self.assertEqual(len(response.data), 0)
+        tag = another_response.data.get("tags")[0]["id"]
+        url = "{route}{tag}/notes".format(route=self.url.get("tags"),
+                                          tag=tag)
+        request = self.factory.get(url)
+        force_authenticate(request, user=self.another_user)
+        response = NotesTagList.as_view()(request)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
